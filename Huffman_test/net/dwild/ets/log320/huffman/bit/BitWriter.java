@@ -12,7 +12,7 @@ public class BitWriter {
 
     private int bitPosition = 7;
 
-    public BitWriter(FileOutputStream fileOutputStream) {
+    public BitWriter(OutputStream fileOutputStream) {
         this.outputStream = fileOutputStream;
     }
 

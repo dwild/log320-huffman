@@ -3,9 +3,7 @@ package net.dwild.ets.log320.huffman;
 import net.dwild.ets.log320.huffman.bit.BitReader;
 import net.dwild.ets.log320.huffman.bit.BitWriter;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Main {
@@ -16,7 +14,7 @@ public class Main {
     }
 
     public static void compress() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("test_compress.txt");
+        BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream("test_compress.bmp"));
 
         ArrayList<TreeNodeValue> values = new ArrayList<TreeNodeValue>();
 
@@ -43,6 +41,7 @@ public class Main {
             TreeNode node = new TreeNode();
             node.setRight(queue.poll());
             node.setLeft(queue.poll());
+            node.setFrequencie(node.getRight().getFrequencie() + node.getLeft().getFrequencie());
             queue.add(node);
         }
 
@@ -50,9 +49,10 @@ public class Main {
 
         generateKey(new boolean[0], tree);
 
-        BitWriter bitWriter = new BitWriter(new FileOutputStream("test_compress.huf"));
+        BitWriter bitWriter = new BitWriter(new BufferedOutputStream(new FileOutputStream("test_compress.huf")));
 
         ArrayList<Boolean> treeStructure = writeTreeStructure(tree);
+
         ArrayList<Byte> treeContent = writeTreeContent(tree);
 
         bitWriter.writeByte(treeContent.size());
@@ -67,18 +67,17 @@ public class Main {
 
         bitWriter.flush();
 
-        fileInputStream = new FileInputStream("test_compress.txt");
+        fileInputStream = new BufferedInputStream(new FileInputStream("test_compress.bmp"));
 
         while ((c = fileInputStream.read()) != -1) {
-            TreeNodeValue value = new TreeNodeValue((byte) c);
-
-            int i = values.indexOf(value);
-            if(i > -1) {
-                value = values.get(i);
-
+            TreeNodeValue value = valuesArray[c];
+            if(value != null) {
                 bitWriter.writeBits(value.getKey());
             }
         }
+
+        fileInputStream.close();
+        bitWriter.close();
     }
 
     /*
@@ -104,7 +103,7 @@ public class Main {
             }
         }
 
-        fileOutputStream = new FileOutputStream("test_compress.huf.txt");
+        fileOutputStream = new FileOutputStream("test_compress.huf.bmp");
         ITreeNode currentNode = tree;
         while(!buffer.isEmpty()) {
             if(currentNode instanceof TreeNodeValue) {

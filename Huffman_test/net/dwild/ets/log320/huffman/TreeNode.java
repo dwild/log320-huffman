@@ -4,6 +4,7 @@ package net.dwild.ets.log320.huffman;
  * Created by Dominic on 2015-01-08.
  */
 public class TreeNode implements ITreeNode {
+    private int frequencie;
     private ITreeNode left;
     private ITreeNode right;
 
@@ -12,18 +13,11 @@ public class TreeNode implements ITreeNode {
     }
 
     public int getFrequencie() {
-        int leftFrequencie = 0;
-        int rightFrequencie = 0;
+        return frequencie;
+    }
 
-        if(left != null) {
-            leftFrequencie = left.getFrequencie();
-        }
-
-        if(right != null) {
-            rightFrequencie = right.getFrequencie();
-        }
-
-        return leftFrequencie + rightFrequencie;
+    public void setFrequencie(int frequencie) {
+        this.frequencie = frequencie;
     }
 
     public ITreeNode getLeft() {
