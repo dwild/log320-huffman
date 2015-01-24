@@ -10,8 +10,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String usage = "Usage: " +
-                "\nPour compresser: java -jar huffman.jar -c|--compress FICHIER" +
-                "\nPour décompresser: java -jar huffman.jar -d|--decompress FICHIER";
+                "\n\tPour compresser: java -jar huffman.jar -c|--compress FICHIER" +
+                "\n\tPour décompresser: java -jar huffman.jar -d|--decompress FICHIER";
         if (args.length != 2 ) {
             System.out.println(usage);
         }
@@ -26,7 +26,6 @@ public class Main {
                 System.out.println(usage);
             }
         }
-
     }
 
     public static void compress(String file_to_compress) throws IOException {
@@ -83,7 +82,7 @@ public class Main {
 
         bitWriter.flush();
 
-        fileInputStream = new BufferedInputStream(new FileInputStream("test_compress.bmp"));
+        fileInputStream = new BufferedInputStream(new FileInputStream(file_to_compress));
 
         while ((c = fileInputStream.read()) != -1) {
             TreeNodeValue value = valuesArray[c];
