@@ -9,12 +9,28 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        compress();
-        //decompress();
+        String usage = "Usage: " +
+                "\nPour compresser: java -jar huffman.jar -c|--compress FICHIER" +
+                "\nPour décompresser: java -jar huffman.jar -d|--decompress FICHIER";
+        if (args.length != 2 ) {
+            System.out.println(usage);
+        }
+        else if (args.length == 2){
+            if (args[0].equals("-c") || args[0].equals("--compress")){
+                compress(args[1]);
+            }
+            else if (args[0].equals("-d") || args[0].equals("--decompress")){
+                //decompress(args[1]);
+            }
+            else {
+                System.out.println(usage);
+            }
+        }
+
     }
 
-    public static void compress() throws IOException {
-        BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream("test_compress.bmp"));
+    public static void compress(String file_to_compress) throws IOException {
+        BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file_to_compress));
 
         ArrayList<TreeNodeValue> values = new ArrayList<TreeNodeValue>();
 
@@ -49,7 +65,7 @@ public class Main {
 
         generateKey(new boolean[0], tree);
 
-        BitWriter bitWriter = new BitWriter(new BufferedOutputStream(new FileOutputStream("test_compress.huf")));
+        BitWriter bitWriter = new BitWriter(new BufferedOutputStream(new FileOutputStream(file_to_compress + ".huf")));
 
         ArrayList<Boolean> treeStructure = writeTreeStructure(tree);
 

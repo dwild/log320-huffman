@@ -1,2 +1,7 @@
-huffman.iml
+*.iml
+*.bmp
+*.huf
+
 .idea/
+out/
+Huffman_test/META-INF/
