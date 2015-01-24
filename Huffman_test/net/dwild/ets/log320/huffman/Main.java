@@ -15,7 +15,7 @@ public class Main {
         if (args.length != 2 ) {
             System.out.println(usage);
         }
-        else if (args.length == 2){
+        else {
             if (args[0].equals("-c") || args[0].equals("--compress")){
                 compress(args[1]);
             }
