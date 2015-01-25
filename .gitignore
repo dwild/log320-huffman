@@ -1,6 +1,8 @@
 *.iml
 *.bmp
 *.huf
+*.drjava
+*.java~
 
 .idea/
 out/
