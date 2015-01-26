@@ -33,6 +33,15 @@ public class BitReader {
 
         return inputStream.read();
     }
+    
+    public int readInt() throws IOException{
+    	int size = 0;
+    	size += inputStream.read() * 256 * 256 * 256;
+    	size += inputStream.read() * 256 * 256;
+    	size += inputStream.read() * 256;
+    	size += inputStream.read();
+    	return size;
+   }
 
     public void close() throws IOException {
         inputStream.close();
@@ -40,5 +49,9 @@ public class BitReader {
     
     public InputStream getInputStream() {
     	return inputStream;
+    }
+    
+    public boolean isEmpty() {
+    	return true;
     }
 }

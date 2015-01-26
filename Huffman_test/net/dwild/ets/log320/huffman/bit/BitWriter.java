@@ -36,6 +36,13 @@ public class BitWriter {
             writeBit(bit);
         }
     }
+    
+    public void writeInt(int size) throws IOException{
+    	 outputStream.write((size >> 24) & 255);
+    	 outputStream.write((size >> 16) & 255);
+    	 outputStream.write((size >> 8) & 255);
+    	 outputStream.write((size) & 255);
+    }
 
     public void flush() throws IOException {
         if(bitPosition < 7) {

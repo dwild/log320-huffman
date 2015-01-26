@@ -82,7 +82,11 @@ public class Main {
         }
 
         bitWriter.flush();
+        fileInputStream.close();
 
+        File file = new File(file_to_compress);
+        
+        bitWriter.writeInt((int) file.length());
         fileInputStream = new BufferedInputStream(new FileInputStream(file_to_compress));
 
         while ((c = fileInputStream.read()) != -1) {
@@ -98,100 +102,35 @@ public class Main {
 
     
     public static void decompress(String file_to_decompress) throws IOException {
-//        BitReader bitReader = new BitReader(new FileInputStream(file_to_decompress));
-//
-//        ArrayList<TreeNodeValue> values = new ArrayList<TreeNodeValue>();
-//
-//        int treeNodeValueSize = bitReader.readByte();
-//        for(int i = 0; i < treeNodeValueSize; i++) {
-//            values.add(new TreeNodeValue((byte) bitReader.readByte()));
-//        }
-//
-//        TreeNode currentNode = new TreeNode();
-//
-//        ArrayDeque<Boolean> buffer = new ArrayDeque<Boolean>();
-//
-//        int c;
-//        while ((c = bitReader.readByte()) != -1) {
-//            boolean[] value = getBoolean((byte) c);
-//
-//            for(boolean b:value) {
-//                buffer.add(b);
-//            }
-//        }
-//
-//        fileOutputStream = new FileOutputStream("test_compress.huf.bmp");
-//        ITreeNode currentNode = tree;
-//        while(!buffer.isEmpty()) {
-//            if(currentNode instanceof TreeNodeValue) {
-//                fileOutputStream.write(((TreeNodeValue) currentNode).getValue());
-//                currentNode = tree;
-//            }
-//            else if(currentNode instanceof TreeNode) {
-//                boolean isRight = buffer.poll();
-//
-//                if(isRight) {
-//                    currentNode = ((TreeNode) currentNode).getRight();
-//                }
-//                else {
-//                    currentNode = ((TreeNode) currentNode).getLeft();
-//                }
-//            }
-//        }
+        BitReader bitReader = new BitReader(new BufferedInputStream(new FileInputStream(file_to_decompress)));
+        TreeReader treeReader = new TreeReader();
+        treeReader.readTree(bitReader);
+
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file_to_decompress.replace(".huf", "")));
+        
+        int currentSize = 0;
+        int totalSize = bitReader.readInt();
+        ITreeNode currentNode = treeReader.getTree();
+        while(currentSize < totalSize) {
+            if(currentNode instanceof TreeNodeValue) {
+            	outputStream.write(((TreeNodeValue) currentNode).getValue());
+                currentNode = treeReader.getTree();
+                currentSize++;
+            }
+            else if(currentNode instanceof TreeNode) {
+                boolean isRight = bitReader.readBit();
+
+                if(isRight) {
+                    currentNode = ((TreeNode) currentNode).getRight();
+                }
+                else {
+                    currentNode = ((TreeNode) currentNode).getLeft();
+                }
+            }      
+        }
+        
+        outputStream.close();
     }
-    
-
-    public static boolean readTreeStructure(BitReader bitReader) {
-
-
-        return false;
-    }
-
-//    public static ArrayList<Boolean> writeTreeStructure(TreeNode node) {
-//        ArrayList<Boolean> buffer = new ArrayList<Boolean>();
-//
-//        ITreeNode left = node.getLeft();
-//        if(left instanceof TreeNodeValue) {
-//            buffer.add(true);
-//        }
-//        else if(left instanceof TreeNode) {
-//            buffer.add(false);
-//            buffer.addAll(writeTreeStructure((TreeNode) left));
-//        }
-//
-//        ITreeNode right = node.getRight();
-//        if(right instanceof TreeNodeValue) {
-//            buffer.add(true);
-//        }
-//        else if(right instanceof TreeNode) {
-//            buffer.add(false);
-//            buffer.addAll(writeTreeStructure((TreeNode) right));
-//        }
-//
-//        return buffer;
-//    }
-//
-//    public static ArrayList<Byte> writeTreeContent(TreeNode node) {
-//        ArrayList<Byte> buffer = new ArrayList<Byte>();
-//
-//        ITreeNode left = node.getLeft();
-//        if(left instanceof TreeNodeValue) {
-//            buffer.add(((TreeNodeValue) left).getValue());
-//        }
-//        else if(left instanceof TreeNode) {
-//            buffer.addAll(writeTreeContent((TreeNode) left));
-//        }
-//
-//        ITreeNode right = node.getRight();
-//        if(right instanceof TreeNodeValue) {
-//            buffer.add(((TreeNodeValue) right).getValue());
-//        }
-//        else if(right instanceof TreeNode) {
-//            buffer.addAll(writeTreeContent((TreeNode) right));
-//        }
-//
-//        return buffer;
-//    }
 
     public static void generateKey(boolean[] lastKey, TreeNode treeNode) {
         ITreeNode left = treeNode.getLeft();
