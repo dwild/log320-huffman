@@ -37,4 +37,8 @@ public class BitReader {
     public void close() throws IOException {
         inputStream.close();
     }
+    
+    public InputStream getInputStream() {
+    	return inputStream;
+    }
 }
